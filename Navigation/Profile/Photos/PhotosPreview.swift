@@ -21,6 +21,8 @@ class PhotosPreview: UIView {
         return layout
     }()
     
+
+    
     private lazy var collectionView: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collection.translatesAutoresizingMaskIntoConstraints = false

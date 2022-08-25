@@ -114,14 +114,14 @@ class FeedViewController: UIViewController {
     
     private func setupFeedLayout() {
         postButton.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+            make.centerX.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.width.equalTo(150)
             make.height.equalTo(50)
         }
         
         someLabel.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalTo(postButton.snp.bottom).offset(16)
+            make.center.equalToSuperview()
             make.width.equalTo(200)
             make.height.equalTo(40)
         }

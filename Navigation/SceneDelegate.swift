@@ -11,8 +11,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        PostViewController.InfoNetworkManager.shared.urlSession()
+        PostViewController.PlanetsNetworkManager.shared.fetchPlanetsData()
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        let appConfiguration:AppConfiguration = .one
         let tabBarController = UITabBarController()
         let feedViewController = UINavigationController(rootViewController: FeedViewController())
         let profileViewController = ProfileViewController(userService: TestUserService() as UserService, name: "testname")
@@ -21,7 +22,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         window?.rootViewController = createTabBarController()
         window?.makeKeyAndVisible()
-        createPhotosArray()
         DispatchQueue.global().async {
              createPhotosArray()
          }
