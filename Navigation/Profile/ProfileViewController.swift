@@ -35,6 +35,9 @@ class ProfileViewController: UIViewController, UITextFieldDelegate {
         return myTableView
     } ()
     
+
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.prefersLargeTitles = true
@@ -57,7 +60,6 @@ class ProfileViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
         self.navigationController?.navigationBar.isHidden = false
         self.tabBarController?.tabBar.isHidden = false
     }

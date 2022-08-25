@@ -9,11 +9,10 @@ import UIKit
 import SnapKit
 import iOSIntPackage
 
-let filtersSet: [ColorFilter] = [.colorInvert, .noir, .chrome, .fade, .posterize, .tonal,
+private let filtersSet: [ColorFilter] = [.colorInvert, .noir, .chrome, .fade, .posterize, .tonal,
                                          .process, .transfer, .bloom(intensity: 10),
                                          .sepia(intensity: 80)]
 private let photosArray = (1...20).compactMap {"\($0)"}
-let threadPhotosArray = (1...20).compactMap {UIImage(named: "pic_\($0)") }
 private let imageProcessor = ImageProcessor()
 public var filtredPhotosArray:[UIImage] = []
 
@@ -36,6 +35,4 @@ func getRandomFilter (set: [ColorFilter]) -> ColorFilter {
     let randomFilterNumber = Int.random(in: 0..<set.count)
     return set[randomFilterNumber]
 }
-
-
 

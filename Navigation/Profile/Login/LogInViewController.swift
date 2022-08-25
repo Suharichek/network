@@ -57,14 +57,30 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         return button
     }()
     
+    private lazy var hackThePasswordButton: CustomButton = {
+        let button = CustomButton (
+            title: "Взлом пароля",
+            titleColor: UIColor.white,
+            backColor: UIColor.orange,
+            backImage: UIImage()
+        )
+        return button
+    }()
+    
     public lazy var loginTextField: UITextField = {
         let textField = logPassTextField(placeholder: "Email или номер телефона", secure: false)
+        let icon = UIImageView(image: UIImage(systemName: "person.fill"))
+        icon.tintColor = UIColor(named: "blue_pixel")
+        textField.leftView = textFieldIcon(subView: icon)
         textField.addTarget(self, action: #selector(logInButtonAlpha), for: .editingChanged)
         return textField
     }()
     
     private lazy var passwordTextField: UITextField = {
         let textField = logPassTextField(placeholder: "Пароль", secure: true)
+        let icon = UIImageView(image: UIImage(systemName: "lock.fill"))
+        icon.tintColor = UIColor(named: "blue_pixel")
+        textField.leftView = textFieldIcon(subView: icon)
         textField.addTarget(self, action: #selector(logInButtonAlpha), for: .editingChanged)
         return textField
     }()
@@ -93,6 +109,11 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         logInButton.tapAction = { [weak self] in
             guard let self = self else { return }
             self.logInButtonPressed()
+        }
+        
+        hackThePasswordButton.tapAction = { [weak self] in
+            guard let self = self else { return }
+            self.hackPassword()
         }
     }
     
@@ -154,9 +175,32 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         contentView.addSubview(logo)
         contentView.addSubview(textFieldsStackView)
         contentView.addSubview(logInButton)
+        contentView.addSubview(hackThePasswordButton)
         textFieldsStackView.addArrangedSubview(loginTextField)
         textFieldsStackView.addArrangedSubview(passwordTextField)
         setupLoginLayout()
+    }
+    
+    func hackPassword() {
+        let hack = BrutForce()
+        var pass: String = ""
+        
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        passwordTextField.leftView = textFieldIcon(subView: activityIndicator)
+        passwordTextField.placeholder = "Взлом пароля..."
+        activityIndicator.startAnimating()
+        DispatchQueue.global().async {
+            pass = hack.bruteForce(passwordToUnlock: "a$8")
+            
+            DispatchQueue.main.sync {
+                self.passwordTextField.text = pass
+                self.passwordTextField.isSecureTextEntry = false
+                self.passwordTextField.placeholder = "Пароль"
+                activityIndicator.stopAnimating()
+                self.passwordTextField.leftView = self.textFieldIcon(subView: UIImageView(image: UIImage(systemName: "lock")))
+                self.logInButtonAlpha()
+            }
+        }
     }
     
     private func setupLoginLayout() {
@@ -183,6 +227,12 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
         
         logInButton.snp.makeConstraints { make in
             make.top.equalTo(textFieldsStackView.snp.bottom).offset(16)
+            make.leading.trailing.equalTo(contentView).inset(16)
+            make.height.equalTo(50)
+        }
+        
+        hackThePasswordButton.snp.makeConstraints { make in
+            make.top.equalTo(logInButton.snp.bottom).offset(16)
             make.leading.trailing.equalTo(contentView).inset(16)
             make.height.equalTo(50)
         }
@@ -223,6 +273,26 @@ class LogInViewController: UIViewController, UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    func textFieldIcon (subView: UIView) -> UIView {
+        let leftView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
+        leftView.addSubview(subView)
+        subView.center = leftView.center
+        return leftView
+    }
+}
+
+extension UITextField {
+    func setLeftPaddingPoints(_ amount:CGFloat){
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
+        self.leftView = paddingView
+        self.leftViewMode = .always
+    }
+    func setRightPaddingPoints(_ amount:CGFloat) {
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
+        self.rightView = paddingView
+        self.rightViewMode = .always
     }
 }
 
